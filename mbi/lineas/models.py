@@ -49,15 +49,14 @@ class Ramal(models.Model):
 
 
 class Parada(models.Model):
-    '''
-    {"d":[
-        {"__type":"MiBondiEntidades.ParadaBE","codigo":"","nombre":"TERMINAL","id":"","descripcion":"TERMINAL"}
-        {"__type":"MiBondiEntidades.ParadaBE","codigo":"147","nombre":"PARADA 147 ND - UNQ","id":"147","descripcion":"PARADA 147 ND - UNQ"}]}
+    ''' puntos de detencion de los colectivos '''
+    origen = models.ForeignKey(Origen, on_delete=models.PROTECT, related_name='paradas_origen')
+    destino = models.ForeignKey(Origen, on_delete=models.PROTECT, related_name='paradas_destino')
+    nombre = models.CharField(max_length=180)
+    descripcion = models.CharField(max_length=180, null=True, blank=True)
+    id_externo = models.CharField(max_length=40, help_text='codigo se llama al traerlo, hay vacios!')
+
+    class Meta:
+        unique_together = (('origen', 'id_externo'))
     
-    {"d":[
-        {"__type":"MiBondiEntidades.ParadaBE","codigo":"","nombre":"TERMINAL","id":"","descripcion":"TERMINAL"}
-        {"__type":"MiBondiEntidades.ParadaBE","codigo":"MD14","nombre":"PARADA MD14 MUNICIPALIDAD MENDIOLAZA","id":"MD14","descripcion":"PARADA MD14 MUNICIPALIDAD MENDIOLAZA"}
-        {"__type":"MiBondiEntidades.ParadaBE","codigo":"MD15","nombre":"PARADA MD15 PUENTE TALAR","id":"MD15","descripcion":"PARADA MD15 PUENTE TALAR"}
-        {"__type":"MiBondiEntidades.ParadaBE","codigo":"MD16","nombre":"PARADA MD16 KILOMETRO 16","id":"MD16","descripcion":"PARADA MD16 KILOMETRO 16"}
-        {"__type":"MiBondiEntidades.ParadaBE","codigo":"MD18","nombre":"PARADA MD18 CALLE 6","id":"MD18","descripcion":"PARADA MD18 CALLE 6"}]}
-    '''
+    
