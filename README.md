@@ -27,6 +27,7 @@ Traer los destinos desde los orígenes con lineas
 python manage.py importar_destinos_desde_origenes
 ```
 
+Traer orígenes de empresas sin líneas
 ```
-python manage.py 
+python manage.py importar_origenes_desde_empresas
 ```
