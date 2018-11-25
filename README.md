@@ -26,13 +26,24 @@ python manage.py importar_origenes_desde_empresas
 Traer los destinos desde los orígenes (con y sin lineas)
 ```
 python manage.py importar_destinos_desde_origenes
-python manage.py importar_destinos_desde_origenes_sin_lineas
+python manage.py importar_destinos_desde_origenes_sin_linea
 ```
 
 Traer todas las paradas del sistema
 ```
 python manage.py importar_paradas
 ```
+
+Crear conjunto de lineas y origenes a gusto, el mío es mendiolaza-cordoba
+```
+python manage.py crear_espera_mendiolaza_cordoba
+```
+
+Buscar colectivos de las esperas activas (hacer cada 1 minuto aprox para mantener datos actualizados en mapa)
+```
+python manage.py buscar_bondis
+```
+
 
 
 ### Instalar la base de datos 

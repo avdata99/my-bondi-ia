@@ -38,6 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django.contrib.gis',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_gis',  # https://github.com/djangonauts/django-rest-framework-gis
+    
     'empresas',
     'lineas',
     'bondis',
@@ -74,6 +79,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mbi.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissions'
+    ]
+}
 
 """
 DATABASES = {
@@ -132,3 +142,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

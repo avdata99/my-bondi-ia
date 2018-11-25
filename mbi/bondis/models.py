@@ -47,3 +47,6 @@ class ResultadosEspera(models.Model):
     llegada = models.CharField(max_length=300, null=True, blank=True)
     info = models.CharField(max_length=300, null=True, blank=True)
     geo = models_geo.PointField(null=True, blank=True)
+
+    def __str__(self):
+        return '{} {}'.format(self.opcion_espera.nombre, self.info)

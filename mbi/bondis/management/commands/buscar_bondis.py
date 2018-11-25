@@ -48,7 +48,7 @@ class Command(BaseCommand):
                 for op in options:
                     # tiene divs con clases para diferentes secciones: salida, llegada e info
                     salida = op.find("div", class_='salida')
-                    text_salida = 'Sin datos de la salida'
+                    text_salida = None
                     if salida is not None:
                         # tiene varios labels pero solo uno visible
                         labels = salida.find_all('label', style="display: initial")
@@ -64,13 +64,13 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.SUCCESS('SALIDA {}'.format(text_salida)))
                     
                     llegada = op.find("div", class_='llegada')
-                    text_llegada = 'Sin datos de llegada'
+                    text_llegada = None
                     if llegada is not None:
                         text_llegada = self.clean_text(llegada)
                     self.stdout.write(self.style.SUCCESS('LLEGADA {}'.format(text_llegada)))
 
                     info = op.find("div", class_='info')
-                    text_info = 'Sin informacion adicional en {}'.format(op)
+                    text_info = None
                     if info is not None:
                         labels = info.find_all('div', style="display: initial")
                         textos = []
@@ -85,19 +85,20 @@ class Command(BaseCommand):
                     if len(latlong_a) > 0:  # hay geolocalizacion
                         llh = latlong_a[0]['href']  # https://maps.google.com/?q=-31.163811,-64.321340
                         ll = llh.split("=")[1]
-                        lat = ll.split(',')[0]
-                        lng = ll.split(',')[1]
+                        lat = float(ll.split(',')[0])
+                        lng = float(ll.split(',')[1])
                         self.stdout.write(self.style.SUCCESS('GEO {} {}'.format(lat, lng)))
                         geo = Point(lng, lat, srid=4326)
                     else:
                         self.stdout.write(self.style.SUCCESS('SIN GEO'))
                     
                     # grabar todo a base
-                    ResultadosEspera.objects.create(opcion_espera=opcion, activo=True,
+                    rese = ResultadosEspera.objects.create(opcion_espera=opcion, activo=True,
                                                     salida=text_salida,
-                                                    llegada=text_llegada
-                                                    info=info, geo=geo)
-            
+                                                    llegada=text_llegada,
+                                                    info=text_info,
+                                                    geo=geo)
+
         self.stdout.write(self.style.SUCCESS('FIN'))
     
     def clean_text(self, lbl):
