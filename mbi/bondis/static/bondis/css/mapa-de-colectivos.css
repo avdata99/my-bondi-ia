@@ -18,14 +18,29 @@ html, body {
 
 #div_options {
   position: absolute;
-  top: 10px;
-  left: 40px;
+  top: 5px;
+  left: 5px;
   z-index: 99;
   height: 600px;
-  margin-top: 100px;
+  margin-top: 35px;
 }
 
 #options {
-  height: 580px;
-  width: 90px;
+  height: 380px;
+  width: 130px;
+}
+
+.bondi {
+  background-color: rgba(230, 178, 110, 0.385);
+  margin: 3px;
+  padding: 3px;
+  border: black 2px solid;
+}
+
+.extra_bondi {
+  display: none;
+  background-color: rgba(230, 178, 110, 0.685);
+  border: black 1px solid;
+  margin: 3px;
+  padding: 3px;
 }

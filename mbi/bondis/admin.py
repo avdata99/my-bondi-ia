@@ -18,5 +18,5 @@ class OpcionesEsperaAdmin(admin.ModelAdmin):
 
 @admin.register(ResultadosEspera)
 class ResultadosEsperaAdmin(admin.ModelAdmin):
-    list_display = ['opcion_espera', 'momento', 'activo', 'salida', 'llegada', 'info', 'geo']
+    list_display = ['opcion_espera', 'falta_minutos', 'momento', 'activo', 'salida', 'llegada', 'info', 'geo']
     search_fields = ['opcion']

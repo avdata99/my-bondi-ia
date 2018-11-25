@@ -1,11 +1,11 @@
 from rest_framework import viewsets
-from .serializers import ResultadosEsperaGeoSerializer, ResultadosEsperaSerializer
+from .serializers import ResultadosEsperaGeoSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .pagination import DefaultPagination
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .models import ResultadosEspera
+from .models import ResultadosEspera, Esperando
 import logging
 logger = logging.getLogger(__name__)
 import json
@@ -25,7 +25,10 @@ class ResultadosEsperaViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         espera_id = self.request.query_params['espera']
-        return ResultadosEspera.objects.filter(opcion_espera__espera__id=espera_id, activo=True).order_by('id')  # primero los primeros resultados
+        esperando = Esperando.objects.get(pk=espera_id)
+        ret = esperando.scrape()
+        logger.info('Re-Scrape: {}'.format(ret))
+        return ResultadosEspera.objects.filter(opcion_espera__espera__id=espera_id, activo=True).order_by('falta_minutos')  # primero los primeros resultados
 
 
 class MapaDeColectivosView(TemplateView):
