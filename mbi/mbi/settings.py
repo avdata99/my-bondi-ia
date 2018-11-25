@@ -75,13 +75,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'mbi.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'mbi',
+        'USER': 'mbi',
+        'PASSWORD': 'mbi',
+        'HOST': 'localhost',
+        'PORT': 5432
     }
 }
 

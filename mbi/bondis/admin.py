@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Esperando, OpcionesEspera
+from .models import Esperando, OpcionesEspera, ResultadosEspera
 
 @admin.register(Esperando)
 class EsperandoAdmin(admin.ModelAdmin):
@@ -14,3 +14,9 @@ class OpcionesEsperaAdmin(admin.ModelAdmin):
     list_display = ['nombre', 'espera', 'origen', 'destino', 'linea']
     search_fields = ['nombre']
     list_filter= ['origen__empresa', 'origen', 'destino']
+
+
+@admin.register(ResultadosEspera)
+class ResultadosEsperaAdmin(admin.ModelAdmin):
+    list_display = ['opcion_espera', 'momento', 'activo', 'salida', 'llegada', 'info', 'geo']
+    search_fields = ['opcion']

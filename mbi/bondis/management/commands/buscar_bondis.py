@@ -6,10 +6,11 @@ import sys
 import datetime
 import os
 from datetime import date
-from bondis.models import Esperando, OpcionesEspera
+from bondis.models import Esperando, OpcionesEspera, ResultadosEspera
 import requests
 from bs4 import BeautifulSoup
 import re
+from django.contrib.gis.geos import Point
 
 class Command(BaseCommand):
     help = """Comando para traer las empresas desde MiBondiYa.cba.gov.ar """
@@ -31,6 +32,9 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(' **** ESPERA {}'.format(espera.nombre)))
             for opcion in espera.opciones.all():
                 
+                # desactivar todos los resultados anteriores
+                opcion.resultados.filter(activo=True).update(activo=False)
+
                 url = opcion.get_url()
                 self.stdout.write(self.style.SUCCESS(' **** **** OPCION {} {}'.format(opcion.nombre, url)))
                 page = requests.get(url)
@@ -50,12 +54,11 @@ class Command(BaseCommand):
                         labels = salida.find_all('label', style="display: initial")
                         textos = []
                         for label in labels:
-                            self.stdout.write(self.style.SUCCESS('SALIDA LBL {}'.format(label)))
-                            lst = label.string
-                            self.stdout.write(self.style.SUCCESS('SALIDA CTN {}'.format(lst)))
-                            cleaned = self.clean_text(lst)
-                            self.stdout.write(self.style.SUCCESS(cleaned))
+                            # self.stdout.write(self.style.SUCCESS('SALIDA LBL {}'.format(label)))
+                            cleaned = self.clean_text(label)
+                            # self.stdout.write(self.style.SUCCESS('SALIDA CTN {}'.format(cleaned)))
                             textos.append(cleaned)
+                            # self.stdout.write(self.style.SUCCESS('SALIDA {} {}'.format(len(textos), text_salida)))
                         text_salida = '. '.join(textos)
                     
                     self.stdout.write(self.style.SUCCESS('SALIDA {}'.format(text_salida)))
@@ -63,7 +66,7 @@ class Command(BaseCommand):
                     llegada = op.find("div", class_='llegada')
                     text_llegada = 'Sin datos de llegada'
                     if llegada is not None:
-                        text_llegada = self.clean_text(llegada.string)
+                        text_llegada = self.clean_text(llegada)
                     self.stdout.write(self.style.SUCCESS('LLEGADA {}'.format(text_llegada)))
 
                     info = op.find("div", class_='info')
@@ -72,26 +75,39 @@ class Command(BaseCommand):
                         labels = info.find_all('div', style="display: initial")
                         textos = []
                         for label in labels:
-                            textos.append(self.clean_text(label.contents[0]))
+                            cleaned = self.clean_text(label)
+                            textos.append(cleaned)
                         text_info = '. '.join(textos)
                     self.stdout.write(self.style.SUCCESS('INFO {}'.format(text_info)))
 
                     latlong_a = info.find_all('a', style="display: initial") 
+                    geo = None
                     if len(latlong_a) > 0:  # hay geolocalizacion
                         llh = latlong_a[0]['href']  # https://maps.google.com/?q=-31.163811,-64.321340
                         ll = llh.split("=")[1]
                         lat = ll.split(',')[0]
                         lng = ll.split(',')[1]
                         self.stdout.write(self.style.SUCCESS('GEO {} {}'.format(lat, lng)))
+                        geo = Point(lng, lat, srid=4326)
                     else:
                         self.stdout.write(self.style.SUCCESS('SIN GEO'))
+                    
+                    # grabar todo a base
+                    ResultadosEspera.objects.create(opcion_espera=opcion, activo=True,
+                                                    salida=text_salida,
+                                                    llegada=text_llegada
+                                                    info=info, geo=geo)
             
         self.stdout.write(self.style.SUCCESS('FIN'))
     
-    def clean_text(self, txt):
-        # txt = str(txt)
-        txt = txt.replace('\n', '').strip()
-        txt = txt.replace('\t', '')
-        txt = re.sub(' +',' ', txt)
-        return txt
+    def clean_text(self, lbl):
+        res = []
+        for txt in lbl.stripped_strings:
+            txt = str(txt)
+            txt = re.sub(' +',' ', txt)
+            txt = txt.replace('\r', '')
+            txt = txt.replace('\n', '')
+            res.append(txt)
+        
+        return ' '.join(res)
 

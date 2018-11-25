@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.gis.db import models as models_geo
 from lineas.models import Linea, Origen, Ramal, Parada
 
 class Esperando(models.Model):
@@ -32,3 +33,17 @@ class OpcionesEspera(models.Model):
         proveedor = '&pProveedor={}'.format(self.origen.empresa.prop1)  # yv o cy
 
         return '{}{}{}{}{}{}{}{}'.format(url, empresa, linea, origen, destino, servicio, parada, proveedor)
+    
+    def __str__(self):
+        return self.nombre
+
+
+class ResultadosEspera(models.Model):
+    ''' cada uno de los colectivos como resultados de las búsquedas en espera '''
+    opcion_espera = models.ForeignKey(OpcionesEspera, on_delete=models.CASCADE, related_name='resultados')
+    momento = models.DateTimeField(auto_now_add=True)
+    activo = models.BooleanField(default=True, help_text='Antes de que una opcion cargue lo nuevo desactiva todos los existentes de modo que solo se vea la última llamada')
+    salida = models.CharField(max_length=300, null=True, blank=True)
+    llegada = models.CharField(max_length=300, null=True, blank=True)
+    info = models.CharField(max_length=300, null=True, blank=True)
+    geo = models_geo.PointField(null=True, blank=True)

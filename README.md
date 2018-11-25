@@ -17,9 +17,10 @@ Traer las líneas, orígenes y ramales que tienen las empresas asignadas directa
 python manage.py importar_generales
 ```
 
-Agregar los origenes que tienen algunas líneas
+Agregar los origenes que tienen algunas líneas y directo desde las empresas
 ```
 python manage.py importar_origenes_desde_lineas
+python manage.py importar_origenes_desde_empresas
 ```
 
 Traer los destinos desde los orígenes (con y sin lineas)
@@ -28,15 +29,24 @@ python manage.py importar_destinos_desde_origenes
 python manage.py importar_destinos_desde_origenes_sin_lineas
 ```
 
-Traer orígenes de empresas sin líneas
-```
-python manage.py importar_origenes_desde_empresas
-```
-
 Traer todas las paradas del sistema
 ```
 python manage.py importar_paradas
 ```
 
 
+### Instalar la base de datos 
 
+Dar de alta la base con postgis
+```
+sudo su - postgres
+psql
+```
+
+``` sql
+CREATE USER mbi WITH PASSWORD 'mbi';
+ALTER ROLE mbi SUPERUSER;
+CREATE EXTENSION postgis;
+
+CREATE DATABASE mbi OWNER mbi;
+```
