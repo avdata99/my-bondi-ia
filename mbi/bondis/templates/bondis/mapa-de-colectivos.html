@@ -1,0 +1,27 @@
+{% extends "bondis/base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+{{block.super}}
+<meta name="viewport" content="initial-scale=1.0">
+<link rel="stylesheet" href="{% static "/bondis/css/mapa-de-colectivos.css" %}">
+{% endblock %}
+
+{% block content %}
+
+<div id="all">
+  <div id="map"></div>
+  <div id="div_options">
+    <div id="options">
+      
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block tail %}
+    {{block.super}}
+    <script src="{% static "/bondis/js/mapa-de-colectivos.js" %}" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSaSRWni31_8ldearuwybMWIyGI1p34_o&callback=initMap" async defer></script>
+{% endblock %}

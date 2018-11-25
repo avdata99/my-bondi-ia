@@ -1,0 +1,20 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% block head %}
+    <title>Mapa de colectivos interurbanos de la Provincia Córdoba</title>  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    {% endblock %}
+</head>
+<body>
+  
+  {% block content %}
+  {% endblock %}
+
+    {% block tail %}
+    <script src="https://code.jquery.com/jquery-3.3.1.js" async defer></script>
+    {% endblock %}
+</body>
+</html>
