@@ -57,6 +57,6 @@ class Parada(models.Model):
     id_externo = models.CharField(max_length=40, help_text='codigo se llama al traerlo, hay vacios!')
 
     class Meta:
-        unique_together = (('origen', 'id_externo'))
+        unique_together = (('origen', 'destino', 'id_externo'))
     
     

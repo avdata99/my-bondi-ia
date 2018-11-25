@@ -7,7 +7,7 @@ import datetime
 import os
 from datetime import date
 from empresas.models import Empresa
-from lineas.models import Linea, Origen, Ramal
+from lineas.models import Linea, Origen, Ramal, Parada
 import requests
 from bs4 import BeautifulSoup
 
@@ -28,22 +28,21 @@ class Command(BaseCommand):
         empresa_id_externo = options['empresa_id_externo']
         origen_id_externo = options['origen_id_externo']
 
-        if destino_id_externo == 'NO':
+        if origen_id_externo == 'NO':
             origenes = Origen.objects.all()
         else:
             empresa = Empresa.objects.get(id_externo=empresa_id_externo)
             linea = None if linea_id_externo == 'NO' else Linea.objects.get(id_externo=linea_id_externo, empresa=empresa)
-            origen = Origen.objects.get(id_externo=origen_id_externo, empresa=empresa, linea=linea)
-            destino = Origen.objects.get(id_externo=destino_id_externo, empresa=empresa, linea=linea)
+            origen = Origen.objects.get(id_externo=origen_id_externo, empresa=empresa, linea=linea)            
             origenes = [origen]
-            self.stdout.write(self.style.SUCCESS('Encontrados {} {} {}'.format(empresa.nombre, linea.nombre, origen.nombre)))
+            self.stdout.write(self.style.SUCCESS('Encontrados {} {} {}'.format(empresa.nombre, linea, origen.nombre)))
         
         for origen in origenes:
             empresa = origen.empresa
             linea = origen.linea
-            
+            self.stdout.write(self.style.SUCCESS(' **** ORIGEN {}'.format(origen.nombre)))
             for destino in origen.destinos_posibles.all():
-
+                self.stdout.write(self.style.SUCCESS(' ********* DESTINO {}'.format(destino.nombre)))
                 params = {"pCodigoEmpresa": empresa.id_externo,
                             'pCodigoLinea': "" if linea is None else linea.id_externo,
                             'pCodigoOrigen': origen.id_externo,
@@ -69,13 +68,14 @@ class Command(BaseCommand):
                 
                 for d in data['d']:
                     if d['__type'] == 'MiBondiEntidades.ParadaBE':
-                        parada, created = Origen.objects.get_or_create(id_externo=d['codigo'], 
+                        parada, created = Parada.objects.get_or_create(id_externo=d['codigo'], 
                                                                         origen=origen, 
                                                                         destino=destino)
                         if not created and parada.nombre != d['nombre']:
                             self.stdout.write(self.style.ERROR('Cambio el nombre {} - {}'.format(parada.nombre, d['nombre'])))    
                             sys.exit(1)
                         parada.nombre = d['nombre']
+                        parada.descripcion = d['descripcion']
                         parada.save()
                     else:
                         self.stdout.write(self.style.ERROR('Tipo desconocido {}'.format(d)))

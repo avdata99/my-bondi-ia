@@ -22,12 +22,21 @@ Agregar los origenes que tienen algunas líneas
 python manage.py importar_origenes_desde_lineas
 ```
 
-Traer los destinos desde los orígenes con lineas
+Traer los destinos desde los orígenes (con y sin lineas)
 ```
 python manage.py importar_destinos_desde_origenes
+python manage.py importar_destinos_desde_origenes_sin_lineas
 ```
 
 Traer orígenes de empresas sin líneas
 ```
 python manage.py importar_origenes_desde_empresas
 ```
+
+Traer todas las paradas del sistema
+```
+python manage.py importar_paradas
+```
+
+
+
