@@ -4,10 +4,10 @@ var bondis = []
 
 function initMap() {
     map = new google.maps.Map(div_map, 
-                                {center: 
-                                {lat: -31.256834, lng: -64.299055},
-                                zoom: 12,
-                                mapTypeId: google.maps.MapTypeId.TERRAIN  // ROADMAP HYBRID
+                                {center: {lat: -31.256834, lng: -64.299055},
+                                 gestureHandling: 'greedy',
+                                 zoom: 12,
+                                 mapTypeId: google.maps.MapTypeId.TERRAIN  // ROADMAP HYBRID
                                 });
     var styleControl = document.getElementById('style-selector-control');
     map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(styleControl);
@@ -24,8 +24,21 @@ function load_bondis() {
         bondis = xhr.responseJSON.results;
         map.data.addGeoJson(bondis);
         show_side_bondis();
+        map.data.addListener('click', function(event) {clickBondi(event);});
     });
 }
+
+function clickBondi(event) {
+    // click en alguno de mis puntos en el mapa.
+    let feature = event.feature;
+    
+    if (feature.getProperty('tipo') == 'pedido') {
+      clickPedido(event);
+      }
+    if (feature.getProperty('tipo') == 'carga_descarga') {
+      clickPuntoTrabajo(event);
+      }
+    }
 
 function show_side_bondis() {
     // mostrar la lista de los colectivos
