@@ -107,11 +107,12 @@ class OpcionesEspera(models.Model):
                 geo = Point(lng, lat, srid=4326)
             
             # grabar todo a base
-            rese = ResultadosEspera.objects.create(opcion_espera=self, activo=True,
-                                            salida=text_salida,
-                                            llegada=text_llegada,
-                                            info=text_info,
-                                            geo=geo)
+            if salida is not None and llegada is not None: 
+                rese = ResultadosEspera.objects.create(opcion_espera=self, activo=True,
+                                                salida=text_salida,
+                                                llegada=text_llegada,
+                                                info=text_info,
+                                                geo=geo)
     def clean_text(self, lbl):
         res = []
         for txt in lbl.stripped_strings:
