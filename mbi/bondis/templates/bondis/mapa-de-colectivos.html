@@ -22,6 +22,9 @@
 
 {% block tail %}
     {{block.super}}
+
     <script src="{% static "/bondis/js/mapa-de-colectivos.js" %}" async defer></script>
+
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_WAcPshzQ-CKw0L_TCtJCyZlT91Wvd8c&callback=initMap" async defer></script>
+
 {% endblock %}
