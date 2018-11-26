@@ -18,7 +18,7 @@ function initMap() {
 
 function load_bondis() {
     clean_map();
-    let url = 'http://localhost:8000/bondis/resultados/?espera=1';
+    let url = 'https://bondi.mendiolaza.com.ar/bondis/resultados/?espera=1';
     let xhr = $.getJSON(url);
     xhr.done(function(){
         bondis = xhr.responseJSON.results;
