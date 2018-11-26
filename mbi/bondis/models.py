@@ -146,6 +146,13 @@ class ResultadosEspera(models.Model):
                 hs = int(tiempos[0].split(':')[0])
                 mint = int(tiempos[0].split(':')[1])
                 self.falta_minutos = (60 * hs) + mint
+            else:
+                # 
+                tiempos = re.findall(r'arriba a tu parada a las (\d{2}:\d{2}) hs', self.salida)  
+                if len(tiempos) > 0:  # FIXME en realidad no es tiempo faltante, es la hora de mañana a la que llega
+                    hs = int(tiempos[0].split(':')[0])
+                    mint = int(tiempos[0].split(':')[1])
+                    self.falta_minutos = (60 * hs) + mint
         
         super().save(*args, **kwargs)
 
