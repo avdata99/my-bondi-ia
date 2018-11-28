@@ -37,6 +37,13 @@ html, body {
   border: black 2px solid;
 }
 
+.bondi.selected {
+  background-color: rgba(158, 104, 34, 0.585);
+  margin: 5px;
+  padding: 5px;
+  border: black 4px solid;
+}
+
 .extra_bondi {
   display: none;
   background-color: rgba(230, 178, 110, 0.685);

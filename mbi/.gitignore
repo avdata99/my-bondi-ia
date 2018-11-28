@@ -8,3 +8,4 @@ __pycache__/
 /media
 
 local_settings.py
+*.log
